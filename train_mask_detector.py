@@ -26,12 +26,12 @@ INIT_LR = 1e-4
 EPOCHS = 20
 BS = 32
 
-DIRECTORY = r"C:\Mask Detection\CODE\Face-Mask-Detection-master\dataset"
+DIRECTORY = r"r”C:Users-Joshua-Documents-Mask Crowd-dataset”"
 CATEGORIES = ["with_mask", "without_mask"]
 
 # grab the list of images in our dataset directory, then initialize
 # the list of data (i.e., images) and class images
-print("[INFO] loading images...")
+print("Getting the dataset images.....")
 
 data = []
 labels = []
@@ -92,7 +92,7 @@ for layer in baseModel.layers:
 	layer.trainable = False
 
 # compile our model
-print("[INFO] compiling model...")
+print("Compiling model...")
 opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
 model.compile(loss="binary_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
@@ -107,7 +107,7 @@ H = model.fit(
 	epochs=EPOCHS)
 
 # make predictions on the testing set
-print("[INFO] evaluating network...")
+print("[Evaluating network...")
 predIdxs = model.predict(testX, batch_size=BS)
 
 # for each image in the testing set we need to find the index of the
@@ -119,7 +119,7 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 	target_names=lb.classes_))
 
 # serialize the model to disk
-print("[INFO] saving mask detector model...")
+print("Saving mask detector model...")
 model.save("mask_detector.model", save_format="h5")
 
 # plot the training loss and accuracy
