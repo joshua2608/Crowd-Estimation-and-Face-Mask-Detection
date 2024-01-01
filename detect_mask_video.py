@@ -80,7 +80,7 @@ faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 maskNet = load_model("mask_detector.model")
 
 # initialize the video stream
-print("[INFO] starting video stream...")
+print("[Opening Webcam....")
 vs = VideoStream(src=0).start()
 
 # loop over the frames from the video stream
@@ -88,7 +88,7 @@ while True:
 	# grab the frame from the threaded video stream and resize it
 	# to have a maximum width of 400 pixels
 	frame = vs.read()
-	frame = imutils.resize(frame, width=400)
+	frame = imutils.resize(frame, width=1200)
 
 	# detect faces in the frame and determine if they are wearing a
 	# face mask or not
@@ -103,9 +103,13 @@ while True:
 
 		# determine the class label and color we'll use to draw
 		# the bounding box and text
-		label = "Mask" if mask > withoutMask else "No Mask"
-		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-
+		label = "Mask Worn" if mask > withoutMask else "Please wear mask"
+		if label == "Mask Worn":
+			color=(0,255,0)
+			maskcount+=1
+		else:
+			color=(0,0,255)
+			nomask+=1
 		# include the probability in the label
 		label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
@@ -114,9 +118,13 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
+		cv2.putText(frame, "Mask Count:" + str(maskcount), (0,20),
+			    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0,255,0), 2)
+		cv2.putText(frame, "No Mask Count:" + str(nomask), (0,40),
+			    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0,0,255), 2)
 
 	# show the output frame
-	cv2.imshow("Frame", frame)
+	cv2.imshow("Detection", frame)
 	key = cv2.waitKey(1) & 0xFF
 
 	# if the `q` key was pressed, break from the loop
